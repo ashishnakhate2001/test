@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPI Payment</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+    <h2>UPI Payment Gateway</h2>
+    <label for="amount">Enter Amount:</label>
+    <input type="number" id="amount" placeholder="Enter amount">
+    <br><br>
+    <button onclick="makePayment()">Pay via UPI</button>
+    <br><br>
+    <div id="qrCodeContainer" style="display: none;">
+        <p>Scan this QR Code to Pay:</p>
+        <div id="qrcode"></div>
+    </div>
+
+    <script>
+        function makePayment() {
+            let amount = document.getElementById("amount").value;
+            if (!amount || amount <= 0) {
+                alert("Please enter a valid amount!");
+                return;
+            }
+
+            let upiId = "tarunkumar03150315@okicici"; // Replace with your UPI ID
+            let name = "Tarun Kumar"; // Replace with your name
+            let transactionNote = "Payment for Order";
+            let transactionId = "TXN" + new Date().getTime();
+            let upiUrl = `upi://pay?pa=${upiId}&pn=${name}&mc=&tid=${transactionId}&tr=${transactionId}&tn=${transactionNote}&am=${amount}&cu=INR`;
+
+            // Detect if user is on mobile
+            if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                window.location.href = upiUrl; // Open UPI app on mobile
+            } else {
+                // Show QR code on desktop
+                document.getElementById("qrCodeContainer").style.display = "block";
+                document.getElementById("qrcode").innerHTML = ""; // Clear old QR
+                new QRCode(document.getElementById("qrcode"), upiUrl);
+            }
+        }
+    </script>
+
+</body>
+</html>
